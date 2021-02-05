@@ -1,12 +1,13 @@
 import React from 'react';
+import ListGroup from 'react-bootstrap/ListGroup';
 
 function Channels({ data: list }) {
   return (
-    <ul className="channels">
+    <ListGroup>
       {list.map(({ id, name }) => (
-        <li key={id}>{name}</li>
+        <ListGroup.Item key={id} action>{name}</ListGroup.Item>
       ))}
-    </ul>
+    </ListGroup>
   );
 }
 
