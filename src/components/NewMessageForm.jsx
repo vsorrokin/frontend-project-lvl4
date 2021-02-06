@@ -1,18 +1,17 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Formik } from 'formik';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
-import Cookies from 'js-cookie';
 import API from '../libs/api';
+import AppContext from '../context';
 
 function NewMessageForm({ className = '' }) {
-  const nickname = Cookies.get('nickname');
+  const nickname = useContext(AppContext);
 
   const onSubmit = async ({ body }, { setSubmitting, resetForm }) => {
     try {
       await API.request('createMessage', {
-        id: 1,
         body,
         channelId: 1,
         nickname,

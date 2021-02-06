@@ -1,11 +1,11 @@
 import React from 'react';
 import ListGroup from 'react-bootstrap/ListGroup';
 
-function Channels({ data: list }) {
+function Channels({ channels, currentChannelId }) {
   return (
     <ListGroup>
-      {list.map(({ id, name }) => (
-        <ListGroup.Item key={id} action>{name}</ListGroup.Item>
+      {channels.map(({ id, name }) => (
+        <ListGroup.Item active={id === currentChannelId} key={id} action>{name}</ListGroup.Item>
       ))}
     </ListGroup>
   );
