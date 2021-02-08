@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
 
 const chatSlice = createSlice({
@@ -10,7 +11,7 @@ const chatSlice = createSlice({
   },
   reducers: {
     addChannel(state, action) {
-      state.channel.push(action.payload);
+      state.channels.push(action.payload);
     },
     addMessage(state, action) {
       state.messages.push(action.payload);

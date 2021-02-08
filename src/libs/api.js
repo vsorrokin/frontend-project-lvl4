@@ -7,6 +7,10 @@ const mapping = {
     route: 'channelMessagesPath',
     routeArgProp: 'channelId',
   },
+  createChannel: {
+    method: 'post',
+    route: 'channelsPath',
+  },
 };
 
 export default {

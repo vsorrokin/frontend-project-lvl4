@@ -4,7 +4,9 @@ import { createSelector } from '@reduxjs/toolkit';
 
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+
 import Channels from './Channels';
+import EditChannel from './EditChannel';
 import Chat from './Chat';
 import NewMessageForm from './NewMessageForm';
 import AppContext from '../context';
@@ -32,7 +34,10 @@ function App({
     <AppContext.Provider value={{ nickname, currentChannelId }}>
       <Row className="h-100 border rounded">
         <Col lg="4" className="border-right pt-3">
-          <h4 className="mb-3">Channels</h4>
+          <div className="d-flex mb-3">
+            <h4 className="mb-0">Channels</h4>
+            <EditChannel className="ml-auto" />
+          </div>
           <Channels channels={channels} />
         </Col>
         <Col className="pt-3 d-flex flex-column h-100">
