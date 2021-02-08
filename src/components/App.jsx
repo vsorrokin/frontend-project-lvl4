@@ -29,19 +29,19 @@ function App({
   channels, messages, nickname, currentChannelId,
 }) {
   return (
-    <Row className="h-100 border rounded">
-      <Col lg="4" className="border-right pt-3">
-        <h4 className="mb-3">Channels</h4>
-        <Channels currentChannelId={currentChannelId} channels={channels} />
-      </Col>
-      <Col className="pt-3 d-flex flex-column h-100">
-        <h4 className="mb-3 pb-1 border-bottom">Chat</h4>
-        <AppContext.Provider value={nickname}>
+    <AppContext.Provider value={{ nickname, currentChannelId }}>
+      <Row className="h-100 border rounded">
+        <Col lg="4" className="border-right pt-3">
+          <h4 className="mb-3">Channels</h4>
+          <Channels channels={channels} />
+        </Col>
+        <Col className="pt-3 d-flex flex-column h-100">
+          <h4 className="mb-3 pb-1 border-bottom">Chat</h4>
           <Chat messages={messages} className="border-bottom mb-3 flex-grow-1" />
           <NewMessageForm className="mt-auto" />
-        </AppContext.Provider>
-      </Col>
-    </Row>
+        </Col>
+      </Row>
+    </AppContext.Provider>
   );
 }
 

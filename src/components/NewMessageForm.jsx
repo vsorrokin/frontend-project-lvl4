@@ -7,13 +7,13 @@ import API from '../libs/api';
 import AppContext from '../context';
 
 function NewMessageForm({ className = '' }) {
-  const nickname = useContext(AppContext);
+  const { nickname, currentChannelId: channelId } = useContext(AppContext);
 
   const onSubmit = async ({ body }, { setSubmitting, resetForm }) => {
     try {
       await API.request('createMessage', {
         body,
-        channelId: 1,
+        channelId,
         nickname,
       });
     } catch (e) {

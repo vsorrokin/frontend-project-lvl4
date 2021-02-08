@@ -3,7 +3,7 @@ import Badge from 'react-bootstrap/Badge';
 import AppContext from '../context';
 
 function Chat({ className = '', messages }) {
-  const currentNickname = useContext(AppContext);
+  const { nickname: currentNickname } = useContext(AppContext);
 
   const container = useRef(null);
 
