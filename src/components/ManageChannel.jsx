@@ -1,27 +1,45 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Formik } from 'formik';
 import { connect } from 'react-redux';
+import { createSelector } from '@reduxjs/toolkit';
 
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 
 import API from '../libs/api';
-import { addChannel, setChannel } from '../store';
+import {
+  addChannel, setChannel, setModal, setModalData, updateChannel,
+} from '../store';
 
-const mapDispatchToProps = { addChannel, setChannel };
+const mapDispatchToProps = {
+  addChannel, setChannel, setModal, setModalData, updateChannel,
+};
+
+const selectChannels = (state) => state.channels;
+const selectModalData = (state) => state.modalData;
+
+const selectCurrentChannel = createSelector(
+  [selectChannels, selectModalData],
+  (channels, modalData) => channels
+    .find(({ id }) => id === modalData?.channelId),
+);
 
 const mapStateToProps = (state) => ({
-  ...state,
+  visibleModalName: state.visibleModalName,
+  currentChannel: selectCurrentChannel(state),
 });
 
-function EditChannel({
-  className = '', addChannel, setChannel,
+function ManageChannel({
+  addChannel, setChannel, setModal, setModalData,
+  visibleModalName, currentChannel = {}, updateChannel,
 }) {
-  const [show, setShow] = useState(false);
+  const isEditMode = !!currentChannel?.id;
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleClose = () => {
+    setModal(null);
+    setModalData(null);
+  };
 
   const validate = ({ name }) => {
     const errors = {};
@@ -36,11 +54,20 @@ function EditChannel({
 
   const onSubmit = async ({ name }, { setSubmitting, resetForm }) => {
     try {
-      const { data: { data: { attributes: createdChannel } } } = await API.request('createChannel', {
+      const requestName = isEditMode ? 'patchChannel' : 'createChannel';
+      const { data: { data: { attributes: createdChannel } } } = await API.request(requestName, {
         name,
+        id: currentChannel?.id,
       });
-      addChannel(createdChannel);
-      setChannel(createdChannel.id);
+      if (!isEditMode) {
+        addChannel(createdChannel);
+        setChannel(createdChannel.id);
+      } else {
+        updateChannel({
+          id: currentChannel.id,
+          name,
+        });
+      }
       handleClose();
     } catch (e) {
       console.error(e);
@@ -52,13 +79,9 @@ function EditChannel({
 
   return (
     <>
-      <Button variant="link" className={`${className} p-0`} size="sm" onClick={handleShow}>
-        New channel
-      </Button>
-
-      <Modal show={show} onHide={handleClose}>
+      <Modal show={visibleModalName === 'manageChannel'} onHide={handleClose}>
         <Formik
-          initialValues={{ name: '' }}
+          initialValues={{ name: currentChannel.name || '' }}
           onSubmit={onSubmit}
           validate={validate}
         >
@@ -72,7 +95,9 @@ function EditChannel({
           }) => (
             <Form onSubmit={handleSubmit}>
               <Modal.Header closeButton>
-                <Modal.Title>New channel</Modal.Title>
+                <Modal.Title>
+                  {isEditMode ? 'Rename channel' : 'New channel'}
+                </Modal.Title>
               </Modal.Header>
               <Modal.Body>
                 <Form.Control
@@ -104,4 +129,4 @@ function EditChannel({
   );
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditChannel);
+export default connect(mapStateToProps, mapDispatchToProps)(ManageChannel);

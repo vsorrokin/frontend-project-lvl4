@@ -11,6 +11,11 @@ const mapping = {
     method: 'post',
     route: 'channelsPath',
   },
+  patchChannel: {
+    method: 'patch',
+    route: 'channelPath',
+    routeArgProp: 'id',
+  },
 };
 
 export default {

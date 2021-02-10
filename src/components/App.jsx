@@ -4,12 +4,14 @@ import { createSelector } from '@reduxjs/toolkit';
 
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button';
 
 import Channels from './Channels';
-import EditChannel from './EditChannel';
+import ManageChannel from './ManageChannel';
 import Chat from './Chat';
 import NewMessageForm from './NewMessageForm';
 import AppContext from '../context';
+import { setModal } from '../store';
 
 const selectMessages = (state) => state.messages;
 const selectCurrentChannelId = (state) => state.currentChannelId;
@@ -27,16 +29,25 @@ const mapStateToProps = (state) => ({
   currentChannelId: selectCurrentChannelId(state),
 });
 
+const mapDispatchToProps = { setModal };
+
 function App({
-  channels, messages, nickname, currentChannelId,
+  channels, messages, nickname, currentChannelId, setModal,
 }) {
+  const showNewChannelForm = () => {
+    setModal('manageChannel');
+  };
+
   return (
     <AppContext.Provider value={{ nickname, currentChannelId }}>
+      <ManageChannel />
       <Row className="h-100 border rounded">
         <Col lg="4" className="border-right pt-3">
           <div className="d-flex mb-3">
             <h4 className="mb-0">Channels</h4>
-            <EditChannel className="ml-auto" />
+            <Button variant="link" className="ml-auto p-0" size="sm" onClick={showNewChannelForm}>
+              New channel
+            </Button>
           </div>
           <Channels channels={channels} />
         </Col>
@@ -50,4 +61,4 @@ function App({
   );
 }
 
-export default connect(mapStateToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);

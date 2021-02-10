@@ -23,6 +23,8 @@ const store = configureStore({
   preloadedState: {
     ...gon,
     nickname: initNickname(),
+    visibleModalName: null,
+    modalData: null,
   },
 });
 
