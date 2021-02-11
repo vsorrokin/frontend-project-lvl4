@@ -78,54 +78,52 @@ function ManageChannel({
   };
 
   return (
-    <>
-      <Modal show={visibleModalName === 'manageChannel'} onHide={handleClose}>
-        <Formik
-          initialValues={{ name: currentChannel.name || '' }}
-          onSubmit={onSubmit}
-          validate={validate}
-        >
-          {({
-            values,
-            errors,
-            handleChange,
-            handleSubmit,
-            handleBlur,
-            isSubmitting,
-          }) => (
-            <Form onSubmit={handleSubmit}>
-              <Modal.Header closeButton>
-                <Modal.Title>
-                  {isEditMode ? 'Rename channel' : 'New channel'}
-                </Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <Form.Control
-                  type="text"
-                  name="name"
-                  placeholder="Enter channel name"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.name}
-                  isInvalid={errors.name}
-                />
-                <Form.Control.Feedback type="invalid">
-                  {errors.name}
-                </Form.Control.Feedback>
-              </Modal.Body>
-              <Modal.Footer>
-                <Button variant="secondary" onClick={handleClose}>
-                  Cancel
-                </Button>
-                <Button variant="primary" type="submit" disabled={isSubmitting}>
-                  Save
-                </Button>
-              </Modal.Footer>
-            </Form>
-          )}
-        </Formik>
-      </Modal>
-    </>
+    <Modal show={visibleModalName === 'manageChannel'} onHide={handleClose}>
+      <Formik
+        initialValues={{ name: currentChannel.name || '' }}
+        onSubmit={onSubmit}
+        validate={validate}
+      >
+        {({
+          values,
+          errors,
+          handleChange,
+          handleSubmit,
+          handleBlur,
+          isSubmitting,
+        }) => (
+          <Form onSubmit={handleSubmit}>
+            <Modal.Header closeButton>
+              <Modal.Title>
+                {isEditMode ? 'Rename channel' : 'New channel'}
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Form.Control
+                type="text"
+                name="name"
+                placeholder="Enter channel name"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.name}
+                isInvalid={errors.name}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.name}
+              </Form.Control.Feedback>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={handleClose}>
+                Cancel
+              </Button>
+              <Button variant="primary" type="submit" disabled={isSubmitting}>
+                Save
+              </Button>
+            </Modal.Footer>
+          </Form>
+        )}
+      </Formik>
+    </Modal>
   );
 }
 

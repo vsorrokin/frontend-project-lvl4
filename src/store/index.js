@@ -29,6 +29,9 @@ const chatSlice = createSlice({
         ...rest,
       };
     },
+    removeChannel(state, action) {
+      state.channels.push(action.payload);
+    },
     setModal(state, action) {
       state.visibleModalName = action.payload;
     },
@@ -39,7 +42,7 @@ const chatSlice = createSlice({
 });
 
 export const {
-  addChannel, addMessage, setChannel, setModal, setModalData, updateChannel,
+  addChannel, addMessage, setChannel, setModal, setModalData, updateChannel, removeChannel,
 } = chatSlice.actions;
 
 export default chatSlice.reducer;

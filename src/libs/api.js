@@ -16,6 +16,11 @@ const mapping = {
     route: 'channelPath',
     routeArgProp: 'id',
   },
+  removeChannel: {
+    method: 'delete',
+    route: 'channelPath',
+    routeArgProp: 'id',
+  },
 };
 
 export default {
