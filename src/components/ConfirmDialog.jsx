@@ -1,16 +1,19 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
 function ConfirmDialog({
-  show, onConfirm, onCancel, title = 'Confirm action', text,
+  show, onConfirm, onCancel, title, text,
 }) {
+  const { t } = useTranslation();
+
   return (
     <Modal show={show} onHide={onCancel}>
       <Modal.Header closeButton>
         <Modal.Title>
-          {title}
+          {title || t('confirmAction')}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>

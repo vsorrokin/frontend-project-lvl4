@@ -1,0 +1,21 @@
+export default {
+  translation: {
+    newChannel: 'New channel',
+    channels: 'Channels',
+    chat: 'Chat',
+    confirmChannelRemove: 'Confirm channel remove',
+    sureWantToDeleteChannel: 'Are you sure want to delete channel',
+    rename: 'Rename',
+    remove: 'Remove',
+    confirmAction: 'Confirm action',
+    channelNameRequired: 'Channel name is required',
+    channelNameLess: 'Channel name can\'t be less {{count}} symbols',
+    renameChannel: 'Rename channel',
+    enterChannelName: 'Enter channel name',
+    cancel: 'Cancel',
+    save: 'Save',
+    networkError: 'Network error',
+    messagePlaceholder: 'Message...',
+    send: 'Send',
+  },
+};

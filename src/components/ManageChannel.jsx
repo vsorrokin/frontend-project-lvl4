@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Formik } from 'formik';
 import { connect } from 'react-redux';
 import { createSelector } from '@reduxjs/toolkit';
@@ -36,6 +37,8 @@ function ManageChannel({
 }) {
   const isEditMode = !!currentChannel?.id;
 
+  const { t } = useTranslation();
+
   const input = useRef(null);
 
   useEffect(() => {
@@ -52,10 +55,10 @@ function ManageChannel({
   const validate = ({ name }) => {
     const errors = {};
     if (!name) {
-      errors.name = 'Channel name is required';
+      errors.name = t('channelNameRequired');
     }
     if (name.length < 3) {
-      errors.name = 'Channel name can\'t be less 3 symbols';
+      errors.name = t('channelNameLess', { count: 3 });
     }
     return errors;
   };
@@ -103,7 +106,7 @@ function ManageChannel({
           <Form onSubmit={handleSubmit}>
             <Modal.Header closeButton>
               <Modal.Title>
-                {isEditMode ? 'Rename channel' : 'New channel'}
+                {isEditMode ? t('renameChannel') : t('newChannel')}
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -111,7 +114,7 @@ function ManageChannel({
                 ref={input}
                 type="text"
                 name="name"
-                placeholder="Enter channel name"
+                placeholder={t('enterChannelName')}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 value={values.name}
@@ -123,10 +126,10 @@ function ManageChannel({
             </Modal.Body>
             <Modal.Footer>
               <Button variant="secondary" onClick={handleClose}>
-                Cancel
+                {t('cancel')}
               </Button>
               <Button variant="primary" type="submit" disabled={isSubmitting}>
-                Save
+                {t('save')}
               </Button>
             </Modal.Footer>
           </Form>

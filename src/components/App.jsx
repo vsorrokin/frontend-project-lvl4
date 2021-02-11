@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from '@reduxjs/toolkit';
+import { useTranslation } from 'react-i18next';
 
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -34,6 +35,7 @@ const mapDispatchToProps = { setModal };
 function App({
   channels, messages, nickname, currentChannelId, setModal,
 }) {
+  const { t } = useTranslation();
   const showNewChannelForm = () => {
     setModal('manageChannel');
   };
@@ -44,15 +46,15 @@ function App({
       <Row className="h-100 border rounded">
         <Col lg="4" className="border-right pt-3">
           <div className="d-flex mb-3">
-            <h4 className="mb-0">Channels</h4>
+            <h4 className="mb-0">{t('channels')}</h4>
             <Button variant="link" className="ml-auto p-0" size="sm" onClick={showNewChannelForm}>
-              New channel
+              {t('newChannel')}
             </Button>
           </div>
           <Channels channels={channels} />
         </Col>
         <Col className="pt-3 d-flex flex-column h-100">
-          <h4 className="mb-3 pb-1 border-bottom">Chat</h4>
+          <h4 className="mb-3 pb-1 border-bottom">{t('chat')}</h4>
           <Chat messages={messages} className="border-bottom mb-3 flex-grow-1" />
           <NewMessageForm className="mt-auto" />
         </Col>

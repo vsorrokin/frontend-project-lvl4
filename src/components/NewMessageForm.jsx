@@ -1,6 +1,7 @@
 import React, {
   useContext, useRef, useEffect, useState,
 } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Formik } from 'formik';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
@@ -9,6 +10,7 @@ import API from '../libs/api';
 import AppContext from '../context';
 
 function NewMessageForm({ className = '' }) {
+  const { t } = useTranslation();
   const { nickname, currentChannelId: channelId } = useContext(AppContext);
   const [error, setError] = useState(null);
   const input = useRef(null);
@@ -25,7 +27,7 @@ function NewMessageForm({ className = '' }) {
       });
       setError(null);
     } catch (e) {
-      setError('Network error');
+      setError(t('networkError'));
     }
 
     resetForm();
@@ -50,13 +52,19 @@ function NewMessageForm({ className = '' }) {
                 autoFocus
                 type="text"
                 name="body"
-                placeholder="Message..."
+                placeholder={t('messagePlaceholder')}
                 onChange={handleChange}
                 value={values.body}
                 isInvalid={error}
               />
               <InputGroup.Append>
-                <Button variant="primary" type="submit" disabled={isSubmitting}>Send</Button>
+                <Button
+                  variant="primary"
+                  type="submit"
+                  disabled={isSubmitting || !values.body.trim()}
+                >
+                  {t('send')}
+                </Button>
               </InputGroup.Append>
               <Form.Control.Feedback type="invalid">
                 {error}

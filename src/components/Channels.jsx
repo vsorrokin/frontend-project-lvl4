@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from '@reduxjs/toolkit';
+import { useTranslation } from 'react-i18next';
+
 import Nav from 'react-bootstrap/Nav';
 import Dropdown from 'react-bootstrap/Dropdown';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Button from 'react-bootstrap/Button';
+
 import ConfirmDialog from './ConfirmDialog';
 import {
   setChannel, setModal, setModalData, removeChannel,
@@ -29,6 +32,7 @@ const mapDispatchToProps = {
 function Channels({
   channels, setChannel, setModal, setModalData, currentChannel, removeChannel,
 }) {
+  const { t } = useTranslation();
   const [showConfirm, setShowConfirm] = useState(false);
 
   const rename = () => {
@@ -54,8 +58,8 @@ function Channels({
         onConfirm={remove}
         onCancel={() => setShowConfirm(false)}
         show={showConfirm}
-        title="Confirm channel remove"
-        text={`Are you sure want to delete channel "${currentChannel.name}"`}
+        title={t('confirmChannelRemove')}
+        text={`${t('sureWantToDeleteChannel')} "${currentChannel.name}"`}
       />
       <Nav className="flex-column">
         {channels.map(({ id, name, removable }) => (
@@ -81,8 +85,8 @@ function Channels({
                 />
 
                 <Dropdown.Menu>
-                  <Dropdown.Item as="button" onClick={rename}>Rename</Dropdown.Item>
-                  <Dropdown.Item as="button" onClick={removeRequest}>Remove</Dropdown.Item>
+                  <Dropdown.Item as="button" onClick={rename}>{t('rename')}</Dropdown.Item>
+                  <Dropdown.Item as="button" onClick={removeRequest}>{t('remove')}</Dropdown.Item>
                 </Dropdown.Menu>
               </>
               )}

@@ -13,6 +13,7 @@ import App from './components/App';
 import '../assets/application.scss';
 import initNickname from './libs/nickname';
 import initSocket from './libs/socket';
+import './i18n';
 
 if (process.env.NODE_ENV !== 'production') {
   localStorage.debug = 'chat:*';
