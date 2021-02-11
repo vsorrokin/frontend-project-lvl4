@@ -6,7 +6,9 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Button from 'react-bootstrap/Button';
 import ConfirmDialog from './ConfirmDialog';
-import { setChannel, setModal, setModalData } from '../store';
+import {
+  setChannel, setModal, setModalData, removeChannel,
+} from '../store';
 import API from '../libs/api';
 
 const selectChannels = (state) => state.channels;
@@ -20,10 +22,12 @@ const mapStateToProps = (state) => ({
   currentChannel: selectCurrentChannel(state),
 });
 
-const mapDispatchToProps = { setChannel, setModal, setModalData };
+const mapDispatchToProps = {
+  setChannel, setModal, setModalData, removeChannel,
+};
 
 function Channels({
-  channels, setChannel, setModal, setModalData, currentChannel,
+  channels, setChannel, setModal, setModalData, currentChannel, removeChannel,
 }) {
   const [showConfirm, setShowConfirm] = useState(false);
 
@@ -37,6 +41,7 @@ function Channels({
     await API.request('removeChannel', {
       id: currentChannel.id,
     });
+    removeChannel(currentChannel.id);
   };
 
   const removeRequest = () => {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Formik } from 'formik';
 import { connect } from 'react-redux';
 import { createSelector } from '@reduxjs/toolkit';
@@ -35,6 +35,14 @@ function ManageChannel({
   visibleModalName, currentChannel = {}, updateChannel,
 }) {
   const isEditMode = !!currentChannel?.id;
+
+  const input = useRef(null);
+
+  useEffect(() => {
+    if (visibleModalName) {
+      input.current.focus();
+    }
+  }, [visibleModalName]);
 
   const handleClose = () => {
     setModal(null);
@@ -100,6 +108,7 @@ function ManageChannel({
             </Modal.Header>
             <Modal.Body>
               <Form.Control
+                ref={input}
                 type="text"
                 name="name"
                 placeholder="Enter channel name"

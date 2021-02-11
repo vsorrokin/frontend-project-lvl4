@@ -29,8 +29,12 @@ const chatSlice = createSlice({
         ...rest,
       };
     },
-    removeChannel(state, action) {
-      state.channels.push(action.payload);
+    removeChannel(state, { payload: channelId }) {
+      state.currentChannelId = state.channels[0].id;
+      const foundIndex = state.channels.findIndex(({ id }) => id === channelId);
+      state.channels.splice(foundIndex, 1);
+      state.messages = state.messages
+        .filter(({ channelId: msgChannelId }) => msgChannelId !== channelId);
     },
     setModal(state, action) {
       state.visibleModalName = action.payload;
