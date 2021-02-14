@@ -1,5 +1,7 @@
 import { io } from 'socket.io-client';
-import { addMessage, addChannel, removeChannel, updateChannel } from '../store';
+import {
+  addMessage, addChannel, removeChannel, updateChannel,
+} from '../store';
 
 export default (store) => {
   const socket = io();
