@@ -14,7 +14,7 @@ function Chat({ className = '', messages }) {
   return (
     <div ref={container} className={`${className} overflow-auto`}>
       {messages.map(({ id, body, nickname }) => (
-        <p key={id} className="mb-3">
+        <p key={id} className="mb-3 text-break">
           <Badge variant={currentNickname === nickname ? 'primary' : 'secondary'}>
             {nickname}
           </Badge>

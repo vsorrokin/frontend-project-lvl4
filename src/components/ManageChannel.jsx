@@ -10,11 +10,11 @@ import Form from 'react-bootstrap/Form';
 
 import API from '../libs/api';
 import {
-  addChannel, setChannel, setModal, setModalData, updateChannel,
+  setChannel, setModal, setModalData,
 } from '../store';
 
 const mapDispatchToProps = {
-  addChannel, setChannel, setModal, setModalData, updateChannel,
+  setChannel, setModal, setModalData,
 };
 
 const selectChannels = (state) => state.channels;
@@ -29,11 +29,13 @@ const selectCurrentChannel = createSelector(
 const mapStateToProps = (state) => ({
   visibleModalName: state.visibleModalName,
   currentChannel: selectCurrentChannel(state),
+  channels: selectChannels(state),
 });
 
 function ManageChannel({
-  addChannel, setChannel, setModal, setModalData,
-  visibleModalName, currentChannel = {}, updateChannel,
+  setChannel, setModal, setModalData,
+  visibleModalName, currentChannel = {},
+  channels,
 }) {
   const isEditMode = !!currentChannel?.id;
 
@@ -54,11 +56,18 @@ function ManageChannel({
 
   const validate = ({ name }) => {
     const errors = {};
-    if (!name) {
+    const processedName = name.trim();
+    if (!processedName) {
       errors.name = t('channelNameRequired');
     }
-    if (name.length < 3) {
+    if (processedName.length < 3) {
       errors.name = t('channelNameLess', { count: 3 });
+    }
+    if (processedName.length > 20) {
+      errors.name = t('channelNameMax', { count: 20 });
+    }
+    if (channels.find(({ name: channelName }) => channelName === processedName)) {
+      errors.name = t('channelNameUnique');
     }
     return errors;
   };
@@ -67,17 +76,11 @@ function ManageChannel({
     try {
       const requestName = isEditMode ? 'patchChannel' : 'createChannel';
       const { data: { data: { attributes: createdChannel } } } = await API.request(requestName, {
-        name,
+        name: name.trim(),
         id: currentChannel?.id,
       });
       if (!isEditMode) {
-        addChannel(createdChannel);
         setChannel(createdChannel.id);
-      } else {
-        updateChannel({
-          id: currentChannel.id,
-          name,
-        });
       }
       handleClose();
     } catch (e) {

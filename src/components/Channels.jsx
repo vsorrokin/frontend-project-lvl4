@@ -10,7 +10,7 @@ import Button from 'react-bootstrap/Button';
 
 import ConfirmDialog from './ConfirmDialog';
 import {
-  setChannel, setModal, setModalData, removeChannel,
+  setChannel, setModal, setModalData,
 } from '../store';
 import API from '../libs/api';
 
@@ -26,11 +26,11 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-  setChannel, setModal, setModalData, removeChannel,
+  setChannel, setModal, setModalData,
 };
 
 function Channels({
-  channels, setChannel, setModal, setModalData, currentChannel, removeChannel,
+  channels, setChannel, setModal, setModalData, currentChannel,
 }) {
   const { t } = useTranslation();
   const [showConfirm, setShowConfirm] = useState(false);
@@ -45,7 +45,6 @@ function Channels({
     await API.request('removeChannel', {
       id: currentChannel.id,
     });
-    removeChannel(currentChannel.id);
   };
 
   const removeRequest = () => {

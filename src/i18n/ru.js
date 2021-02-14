@@ -17,5 +17,7 @@ export default {
     networkError: 'Network error',
     messagePlaceholder: 'Message...',
     send: 'Send',
+    channelNameMax: 'Channel name max lentgh is {{count}} symbols',
+    channelNameUnique: 'Channel name must be unique',
   },
 };
