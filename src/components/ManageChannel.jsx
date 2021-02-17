@@ -10,11 +10,11 @@ import Form from 'react-bootstrap/Form';
 
 import API from '../libs/api';
 import {
-  setChannel, setModal, setModalData,
+  setChannel as setChannelOrigin, setModal as setModalOrigin, setModalData as setModalDataOrigin,
 } from '../store';
 
 const mapDispatchToProps = {
-  setChannel, setModal, setModalData,
+  setChannel: setChannelOrigin, setModal: setModalOrigin, setModalData: setModalDataOrigin,
 };
 
 const selectChannels = (state) => state.channels;
@@ -59,16 +59,21 @@ function ManageChannel({
     const processedName = name.trim();
     if (!processedName) {
       errors.name = t('channelNameRequired');
+      return errors;
     }
     if (processedName.length < 3) {
       errors.name = t('channelNameLess', { count: 3 });
+      return errors;
     }
     if (processedName.length > 20) {
       errors.name = t('channelNameMax', { count: 20 });
+      return errors;
     }
     if (channels.find(({ name: channelName }) => channelName === processedName)) {
       errors.name = t('channelNameUnique');
+      return errors;
     }
+
     return errors;
   };
 
@@ -103,7 +108,7 @@ function ManageChannel({
           errors,
           handleChange,
           handleSubmit,
-          handleBlur,
+          // handleBlur,
           isSubmitting,
         }) => (
           <Form onSubmit={handleSubmit}>
@@ -119,7 +124,7 @@ function ManageChannel({
                 name="name"
                 placeholder={t('enterChannelName')}
                 onChange={handleChange}
-                onBlur={handleBlur}
+                // onBlur={handleBlur}
                 value={values.name}
                 isInvalid={errors.name}
               />

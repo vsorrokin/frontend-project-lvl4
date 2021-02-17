@@ -1,6 +1,6 @@
 import { io } from 'socket.io-client';
 import {
-  addMessage, addChannel, removeChannel, updateChannel,
+  addMessage, addChannel, removeChannel, renameChannel,
 } from '../store';
 
 export default (store) => {
@@ -15,7 +15,7 @@ export default (store) => {
     store.dispatch(removeChannel(id));
   });
   socket.on('renameChannel', ({ data: { attributes: channel } }) => {
-    store.dispatch(updateChannel({
+    store.dispatch(renameChannel({
       id: channel.id,
       name: channel.name,
     }));

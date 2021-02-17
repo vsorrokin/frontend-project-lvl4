@@ -13,28 +13,30 @@ import App from './components/App';
 import '../assets/application.scss';
 import initNickname from './libs/nickname';
 import initSocket from './libs/socket';
-import './i18n';
+import initI18n from './i18n';
 
 if (process.env.NODE_ENV !== 'production') {
   localStorage.debug = 'chat:*';
 }
 
+const nickname = initNickname();
+
 const store = configureStore({
   reducer,
   preloadedState: {
     ...gon,
-    nickname: initNickname(),
     visibleModalName: null,
     modalData: null,
   },
 });
 
 initSocket(store);
+initI18n();
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+      <App nickname={nickname} />
     </Provider>
   </React.StrictMode>,
   document.getElementById('chat'),

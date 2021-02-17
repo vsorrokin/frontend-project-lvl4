@@ -26,11 +26,11 @@ function NewMessageForm({ className = '' }) {
         nickname,
       });
       setError(null);
+      resetForm();
     } catch (e) {
       setError(t('networkError'));
     }
 
-    resetForm();
     setSubmitting(false);
     input.current.focus();
   };

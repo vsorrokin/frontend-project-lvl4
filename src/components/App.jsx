@@ -12,7 +12,7 @@ import ManageChannel from './ManageChannel';
 import Chat from './Chat';
 import NewMessageForm from './NewMessageForm';
 import AppContext from '../context';
-import { setModal } from '../store';
+import { setModal as setModalOrigin } from '../store';
 
 const selectMessages = (state) => state.messages;
 const selectCurrentChannelId = (state) => state.currentChannelId;
@@ -24,13 +24,12 @@ const selectChannelMessages = createSelector(
 );
 
 const mapStateToProps = (state) => ({
-  nickname: state.nickname,
   channels: state.channels,
   messages: selectChannelMessages(state),
   currentChannelId: selectCurrentChannelId(state),
 });
 
-const mapDispatchToProps = { setModal };
+const mapDispatchToProps = { setModal: setModalOrigin };
 
 function App({
   channels, messages, nickname, currentChannelId, setModal,
@@ -44,7 +43,7 @@ function App({
     <AppContext.Provider value={{ nickname, currentChannelId }}>
       <ManageChannel />
       <Row className="h-100 border rounded">
-        <Col lg="4" className="border-right pt-3">
+        <Col lg="4" className="border-right pt-3 pb-3 d-flex flex-column h-100">
           <div className="d-flex mb-3">
             <h4 className="mb-0">{t('channels')}</h4>
             <Button variant="link" className="ml-auto p-0" size="sm" onClick={showNewChannelForm}>

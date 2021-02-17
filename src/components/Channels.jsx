@@ -10,7 +10,7 @@ import Button from 'react-bootstrap/Button';
 
 import ConfirmDialog from './ConfirmDialog';
 import {
-  setChannel, setModal, setModalData,
+  setChannel as setChannelOrigin, setModal as setModalOrigin, setModalData as setModalDataOrigin,
 } from '../store';
 import API from '../libs/api';
 
@@ -26,7 +26,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-  setChannel, setModal, setModalData,
+  setChannel: setChannelOrigin, setModal: setModalOrigin, setModalData: setModalDataOrigin,
 };
 
 function Channels({
@@ -60,9 +60,10 @@ function Channels({
         title={t('confirmChannelRemove')}
         text={`${t('sureWantToDeleteChannel')} "${currentChannel.name}"`}
       />
-      <Nav className="flex-column">
+      <Nav className="overflow-auto">
         {channels.map(({ id, name, removable }) => (
           <Nav.Item
+            className="w-100"
             key={id}
             onClick={() => setChannel(id)}
           >

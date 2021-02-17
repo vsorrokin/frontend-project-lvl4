@@ -1,13 +1,14 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
 
+const DEFAULT_CHANNEL_NAME = 'general';
+
 const chatSlice = createSlice({
   name: 'chat',
   initialState: {
     channels: [],
     messages: [],
     currentChannelId: null,
-    nickname: null,
     visibleModalName: null,
     modalData: null,
   },
@@ -21,18 +22,17 @@ const chatSlice = createSlice({
     setChannel(state, action) {
       state.currentChannelId = action.payload;
     },
-    updateChannel(state, { payload: { id: channelId, ...rest } }) {
-      const foundIndex = state.channels.findIndex(({ id }) => id === channelId);
-      const foundChannel = state.channels[foundIndex];
-      state.channels[foundIndex] = {
-        ...foundChannel,
-        ...rest,
-      };
+    renameChannel(state, { payload: { id: channelId, name } }) {
+      const foundChannel = state.channels.find(({ id }) => id === channelId);
+      foundChannel.name = name;
     },
     removeChannel(state, { payload: channelId }) {
-      state.currentChannelId = state.channels[0].id;
-      const foundIndex = state.channels.findIndex(({ id }) => id === channelId);
-      state.channels.splice(foundIndex, 1);
+      if (state.currentChannelId === channelId) {
+        state.currentChannelId = state.channels
+          .find(({ name }) => name === DEFAULT_CHANNEL_NAME).id;
+      }
+      state.channels = state.channels
+        .filter(({ id }) => id !== channelId);
       state.messages = state.messages
         .filter(({ channelId: msgChannelId }) => msgChannelId !== channelId);
     },
@@ -46,7 +46,7 @@ const chatSlice = createSlice({
 });
 
 export const {
-  addChannel, addMessage, setChannel, setModal, setModalData, updateChannel, removeChannel,
+  addChannel, addMessage, setChannel, setModal, setModalData, renameChannel, removeChannel,
 } = chatSlice.actions;
 
 export default chatSlice.reducer;
