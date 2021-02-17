@@ -14,8 +14,8 @@ import NewMessageForm from './NewMessageForm';
 import AppContext from '../context';
 import { openModal } from '../store';
 
-const selectMessages = (state) => state.messages;
-const selectCurrentChannelId = (state) => state.currentChannelId;
+const selectMessages = (state) => state.chat.messages;
+const selectCurrentChannelId = (state) => state.chat.currentChannelId;
 const selectChannelMessages = createSelector(
   [selectMessages, selectCurrentChannelId],
   (messages, currentChannelId) => messages
@@ -25,7 +25,7 @@ const selectChannelMessages = createSelector(
 function App({ nickname }) {
   const messages = useSelector(selectChannelMessages);
   const currentChannelId = useSelector(selectCurrentChannelId);
-  const channels = useSelector((state) => state.channels);
+  const channels = useSelector((state) => state.chat.channels);
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const showNewChannelForm = () => {

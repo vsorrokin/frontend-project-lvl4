@@ -13,8 +13,8 @@ import {
   setChannel, closeModal,
 } from '../store';
 
-const selectChannels = (state) => state.channels;
-const selectModalData = (state) => state.modalData;
+const selectChannels = (state) => state.chat.channels;
+const selectModalData = (state) => state.modal.modalData;
 const selectCurrentChannel = createSelector(
   [selectChannels, selectModalData],
   (channels, modalData) => channels
@@ -23,7 +23,7 @@ const selectCurrentChannel = createSelector(
 
 function ManageChannel() {
   const currentChannel = useSelector(selectCurrentChannel);
-  const visibleModalName = useSelector((state) => state.visibleModalName);
+  const visibleModalName = useSelector((state) => state.modal.visibleModalName);
   const channels = useSelector(selectChannels);
   const dispatch = useDispatch();
   const { t } = useTranslation();

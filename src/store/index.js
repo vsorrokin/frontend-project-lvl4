@@ -9,8 +9,6 @@ const chatSlice = createSlice({
     channels: [],
     messages: [],
     currentChannelId: null,
-    visibleModalName: null,
-    modalData: null,
   },
   reducers: {
     addChannel(state, action) {
@@ -36,6 +34,16 @@ const chatSlice = createSlice({
       state.messages = state.messages
         .filter(({ channelId: msgChannelId }) => msgChannelId !== channelId);
     },
+  },
+});
+
+const modalSlice = createSlice({
+  name: 'modal',
+  initialState: {
+    visibleModalName: null,
+    modalData: null,
+  },
+  reducers: {
     openModal(state, { payload: { name, data = null } }) {
       state.visibleModalName = name;
       state.modalData = data;
@@ -48,7 +56,14 @@ const chatSlice = createSlice({
 });
 
 export const {
-  addChannel, addMessage, setChannel, openModal, closeModal, renameChannel, removeChannel,
+  addChannel, addMessage, setChannel, renameChannel, removeChannel,
 } = chatSlice.actions;
 
-export default chatSlice.reducer;
+export const {
+  openModal, closeModal,
+} = modalSlice.actions;
+
+export default {
+  chat: chatSlice.reducer,
+  modal: modalSlice.reducer,
+};

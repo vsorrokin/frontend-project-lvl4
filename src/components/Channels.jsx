@@ -14,8 +14,8 @@ import {
 } from '../store';
 import API from '../libs/api';
 
-const selectChannels = (state) => state.channels;
-const selectCurrentChannelId = (state) => state.currentChannelId;
+const selectChannels = (state) => state.chat.channels;
+const selectCurrentChannelId = (state) => state.chat.currentChannelId;
 const selectCurrentChannel = createSelector(
   [selectChannels, selectCurrentChannelId],
   (channels, currentChannelId) => channels

@@ -24,9 +24,11 @@ const nickname = initNickname();
 const store = configureStore({
   reducer,
   preloadedState: {
-    ...gon,
-    visibleModalName: null,
-    modalData: null,
+    chat: {
+      ...gon,
+      visibleModalName: null,
+      modalData: null,
+    },
   },
 });
 
