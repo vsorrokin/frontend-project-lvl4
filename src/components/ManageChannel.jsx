@@ -10,11 +10,11 @@ import Form from 'react-bootstrap/Form';
 
 import API from '../libs/api';
 import {
-  setChannel as setChannelOrigin, setModal as setModalOrigin, setModalData as setModalDataOrigin,
+  setChannel as setChannelOrigin, closeModal as closeModalOrigin,
 } from '../store';
 
 const mapDispatchToProps = {
-  setChannel: setChannelOrigin, setModal: setModalOrigin, setModalData: setModalDataOrigin,
+  setChannel: setChannelOrigin, closeModal: closeModalOrigin,
 };
 
 const selectChannels = (state) => state.channels;
@@ -33,7 +33,7 @@ const mapStateToProps = (state) => ({
 });
 
 function ManageChannel({
-  setChannel, setModal, setModalData,
+  setChannel, closeModal,
   visibleModalName, currentChannel = {},
   channels,
 }) {
@@ -50,8 +50,7 @@ function ManageChannel({
   }, [visibleModalName]);
 
   const handleClose = () => {
-    setModal(null);
-    setModalData(null);
+    closeModal();
   };
 
   const validate = ({ name }) => {

@@ -36,17 +36,19 @@ const chatSlice = createSlice({
       state.messages = state.messages
         .filter(({ channelId: msgChannelId }) => msgChannelId !== channelId);
     },
-    setModal(state, action) {
-      state.visibleModalName = action.payload;
+    openModal(state, { payload: { name, data = null } }) {
+      state.visibleModalName = name;
+      state.modalData = data;
     },
-    setModalData(state, action) {
-      state.modalData = action.payload;
+    closeModal(state) {
+      state.visibleModalName = null;
+      state.modalData = null;
     },
   },
 });
 
 export const {
-  addChannel, addMessage, setChannel, setModal, setModalData, renameChannel, removeChannel,
+  addChannel, addMessage, setChannel, openModal, closeModal, renameChannel, removeChannel,
 } = chatSlice.actions;
 
 export default chatSlice.reducer;

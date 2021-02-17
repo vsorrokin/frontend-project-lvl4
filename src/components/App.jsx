@@ -12,7 +12,7 @@ import ManageChannel from './ManageChannel';
 import Chat from './Chat';
 import NewMessageForm from './NewMessageForm';
 import AppContext from '../context';
-import { setModal as setModalOrigin } from '../store';
+import { openModal as openModalOrigin } from '../store';
 
 const selectMessages = (state) => state.messages;
 const selectCurrentChannelId = (state) => state.currentChannelId;
@@ -29,14 +29,14 @@ const mapStateToProps = (state) => ({
   currentChannelId: selectCurrentChannelId(state),
 });
 
-const mapDispatchToProps = { setModal: setModalOrigin };
+const mapDispatchToProps = { openModal: openModalOrigin };
 
 function App({
-  channels, messages, nickname, currentChannelId, setModal,
+  channels, messages, nickname, currentChannelId, openModal,
 }) {
   const { t } = useTranslation();
   const showNewChannelForm = () => {
-    setModal('manageChannel');
+    openModal({ name: 'manageChannel' });
   };
 
   return (

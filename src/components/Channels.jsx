@@ -10,7 +10,7 @@ import Button from 'react-bootstrap/Button';
 
 import ConfirmDialog from './ConfirmDialog';
 import {
-  setChannel as setChannelOrigin, setModal as setModalOrigin, setModalData as setModalDataOrigin,
+  setChannel as setChannelOrigin, openModal as openModalOrigin,
 } from '../store';
 import API from '../libs/api';
 
@@ -26,18 +26,20 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-  setChannel: setChannelOrigin, setModal: setModalOrigin, setModalData: setModalDataOrigin,
+  setChannel: setChannelOrigin, openModal: openModalOrigin,
 };
 
 function Channels({
-  channels, setChannel, setModal, setModalData, currentChannel,
+  channels, setChannel, openModal, currentChannel,
 }) {
   const { t } = useTranslation();
   const [showConfirm, setShowConfirm] = useState(false);
 
   const rename = () => {
-    setModal('manageChannel');
-    setModalData({ channelId: currentChannel.id });
+    openModal({
+      name: 'manageChannel',
+      data: { channelId: currentChannel.id },
+    });
   };
 
   const remove = async () => {
