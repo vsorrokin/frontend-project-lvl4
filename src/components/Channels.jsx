@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { createSelector } from '@reduxjs/toolkit';
 import { useTranslation } from 'react-i18next';
 
@@ -10,7 +10,7 @@ import Button from 'react-bootstrap/Button';
 
 import ConfirmDialog from './ConfirmDialog';
 import {
-  setChannel as setChannelOrigin, openModal as openModalOrigin,
+  setChannel, openModal,
 } from '../store';
 import API from '../libs/api';
 
@@ -21,25 +21,18 @@ const selectCurrentChannel = createSelector(
   (channels, currentChannelId) => channels
     .find(({ id }) => id === currentChannelId),
 );
-const mapStateToProps = (state) => ({
-  currentChannel: selectCurrentChannel(state),
-});
 
-const mapDispatchToProps = {
-  setChannel: setChannelOrigin, openModal: openModalOrigin,
-};
-
-function Channels({
-  channels, setChannel, openModal, currentChannel,
-}) {
+function Channels({ channels }) {
+  const currentChannel = useSelector(selectCurrentChannel);
+  const dispatch = useDispatch();
   const { t } = useTranslation();
   const [showConfirm, setShowConfirm] = useState(false);
 
   const rename = () => {
-    openModal({
+    dispatch(openModal({
       name: 'manageChannel',
       data: { channelId: currentChannel.id },
-    });
+    }));
   };
 
   const remove = async () => {
@@ -67,13 +60,13 @@ function Channels({
           <Nav.Item
             className="w-100"
             key={id}
-            onClick={() => setChannel(id)}
+            onClick={() => dispatch(setChannel(id))}
           >
             <Dropdown as={ButtonGroup} className="d-flex mb-2">
               <Button
                 variant={id === currentChannel.id ? 'primary' : 'light'}
                 className="flex-grow-1 text-left"
-                onClick={() => setChannel(id)}
+                onClick={() => dispatch(setChannel(id))}
               >
                 {name}
               </Button>
@@ -102,4 +95,4 @@ function Channels({
   );
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Channels);
+export default Channels;

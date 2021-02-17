@@ -1,5 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { createSelector } from '@reduxjs/toolkit';
 import { useTranslation } from 'react-i18next';
 
@@ -12,31 +12,24 @@ import ManageChannel from './ManageChannel';
 import Chat from './Chat';
 import NewMessageForm from './NewMessageForm';
 import AppContext from '../context';
-import { openModal as openModalOrigin } from '../store';
+import { openModal } from '../store';
 
 const selectMessages = (state) => state.messages;
 const selectCurrentChannelId = (state) => state.currentChannelId;
-
 const selectChannelMessages = createSelector(
   [selectMessages, selectCurrentChannelId],
   (messages, currentChannelId) => messages
     .filter(({ channelId }) => channelId === currentChannelId),
 );
 
-const mapStateToProps = (state) => ({
-  channels: state.channels,
-  messages: selectChannelMessages(state),
-  currentChannelId: selectCurrentChannelId(state),
-});
-
-const mapDispatchToProps = { openModal: openModalOrigin };
-
-function App({
-  channels, messages, nickname, currentChannelId, openModal,
-}) {
+function App({ nickname }) {
+  const messages = useSelector(selectChannelMessages);
+  const currentChannelId = useSelector(selectCurrentChannelId);
+  const channels = useSelector((state) => state.channels);
+  const dispatch = useDispatch();
   const { t } = useTranslation();
   const showNewChannelForm = () => {
-    openModal({ name: 'manageChannel' });
+    dispatch(openModal({ name: 'manageChannel' }));
   };
 
   return (
@@ -62,4 +55,4 @@ function App({
   );
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default App;

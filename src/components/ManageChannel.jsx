@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Formik } from 'formik';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { createSelector } from '@reduxjs/toolkit';
 
 import Button from 'react-bootstrap/Button';
@@ -10,38 +10,25 @@ import Form from 'react-bootstrap/Form';
 
 import API from '../libs/api';
 import {
-  setChannel as setChannelOrigin, closeModal as closeModalOrigin,
+  setChannel, closeModal,
 } from '../store';
-
-const mapDispatchToProps = {
-  setChannel: setChannelOrigin, closeModal: closeModalOrigin,
-};
 
 const selectChannels = (state) => state.channels;
 const selectModalData = (state) => state.modalData;
-
 const selectCurrentChannel = createSelector(
   [selectChannels, selectModalData],
   (channels, modalData) => channels
-    .find(({ id }) => id === modalData?.channelId),
+    .find(({ id }) => id === modalData?.channelId) || {},
 );
 
-const mapStateToProps = (state) => ({
-  visibleModalName: state.visibleModalName,
-  currentChannel: selectCurrentChannel(state),
-  channels: selectChannels(state),
-});
-
-function ManageChannel({
-  setChannel, closeModal,
-  visibleModalName, currentChannel = {},
-  channels,
-}) {
-  const isEditMode = !!currentChannel?.id;
-
+function ManageChannel() {
+  const currentChannel = useSelector(selectCurrentChannel);
+  const visibleModalName = useSelector((state) => state.visibleModalName);
+  const channels = useSelector(selectChannels);
+  const dispatch = useDispatch();
   const { t } = useTranslation();
-
   const input = useRef(null);
+  const isEditMode = !!currentChannel?.id;
 
   useEffect(() => {
     if (visibleModalName) {
@@ -50,7 +37,7 @@ function ManageChannel({
   }, [visibleModalName]);
 
   const handleClose = () => {
-    closeModal();
+    dispatch(closeModal());
   };
 
   const validate = ({ name }) => {
@@ -68,6 +55,10 @@ function ManageChannel({
       errors.name = t('channelNameMax', { count: 20 });
       return errors;
     }
+    if (isEditMode && processedName === currentChannel.name) {
+      return errors;
+    }
+
     if (channels.find(({ name: channelName }) => channelName === processedName)) {
       errors.name = t('channelNameUnique');
       return errors;
@@ -84,7 +75,7 @@ function ManageChannel({
         id: currentChannel?.id,
       });
       if (!isEditMode) {
-        setChannel(createdChannel.id);
+        dispatch(setChannel(createdChannel.id));
       }
       handleClose();
     } catch (e) {
@@ -146,4 +137,4 @@ function ManageChannel({
   );
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ManageChannel);
+export default ManageChannel;
