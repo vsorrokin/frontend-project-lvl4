@@ -11,7 +11,6 @@ import Channels from './Channels';
 import ManageChannel from './ManageChannel';
 import Chat from './Chat';
 import NewMessageForm from './NewMessageForm';
-import AppContext from '../context';
 import { openModal } from '../store';
 
 const selectMessages = (state) => state.chat.messages;
@@ -22,9 +21,8 @@ const selectChannelMessages = createSelector(
     .filter(({ channelId }) => channelId === currentChannelId),
 );
 
-function App({ nickname }) {
+function App() {
   const messages = useSelector(selectChannelMessages);
-  const currentChannelId = useSelector(selectCurrentChannelId);
   const channels = useSelector((state) => state.chat.channels);
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -33,7 +31,7 @@ function App({ nickname }) {
   };
 
   return (
-    <AppContext.Provider value={{ nickname, currentChannelId }}>
+    <>
       <ManageChannel />
       <Row className="h-100 border rounded">
         <Col lg="4" className="border-right pt-3 pb-3 d-flex flex-column h-100">
@@ -51,7 +49,7 @@ function App({ nickname }) {
           <NewMessageForm className="mt-auto" />
         </Col>
       </Row>
-    </AppContext.Provider>
+    </>
   );
 }
 

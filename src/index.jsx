@@ -14,6 +14,7 @@ import '../assets/application.scss';
 import initNickname from './libs/nickname';
 import initSocket from './libs/socket';
 import initI18n from './i18n';
+import AppContext from './context';
 
 if (process.env.NODE_ENV !== 'production') {
   localStorage.debug = 'chat:*';
@@ -38,7 +39,9 @@ initI18n();
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App nickname={nickname} />
+      <AppContext.Provider value={{ nickname }}>
+        <App />
+      </AppContext.Provider>
     </Provider>
   </React.StrictMode>,
   document.getElementById('chat'),

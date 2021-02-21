@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
 
-const DEFAULT_CHANNEL_NAME = 'general';
+const DEFAULT_CHANNEL_ID = 1;
 
 const chatSlice = createSlice({
   name: 'chat',
@@ -26,8 +26,7 @@ const chatSlice = createSlice({
     },
     removeChannel(state, { payload: channelId }) {
       if (state.currentChannelId === channelId) {
-        state.currentChannelId = state.channels
-          .find(({ name }) => name === DEFAULT_CHANNEL_NAME).id;
+        state.currentChannelId = DEFAULT_CHANNEL_ID;
       }
       state.channels = state.channels
         .filter(({ id }) => id !== channelId);

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Formik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 import { createSelector } from '@reduxjs/toolkit';
+import * as Yup from 'yup';
 
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -40,33 +41,6 @@ function ManageChannel() {
     dispatch(closeModal());
   };
 
-  const validate = ({ name }) => {
-    const errors = {};
-    const processedName = name.trim();
-    if (!processedName) {
-      errors.name = t('channelNameRequired');
-      return errors;
-    }
-    if (processedName.length < 3) {
-      errors.name = t('channelNameLess', { count: 3 });
-      return errors;
-    }
-    if (processedName.length > 20) {
-      errors.name = t('channelNameMax', { count: 20 });
-      return errors;
-    }
-    if (isEditMode && processedName === currentChannel.name) {
-      return errors;
-    }
-
-    if (channels.find(({ name: channelName }) => channelName === processedName)) {
-      errors.name = t('channelNameUnique');
-      return errors;
-    }
-
-    return errors;
-  };
-
   const onSubmit = async ({ name }, { setSubmitting, resetForm }) => {
     try {
       const requestName = isEditMode ? 'patchChannel' : 'createChannel';
@@ -91,7 +65,22 @@ function ManageChannel() {
       <Formik
         initialValues={{ name: currentChannel.name || '' }}
         onSubmit={onSubmit}
-        validate={validate}
+        validationSchema={Yup.object({
+          name: Yup.string()
+            .required(t('channelNameRequired'))
+            .min(3, t('channelNameLess', { count: 3 }))
+            .max(20, t('channelNameMax', { count: 20 }))
+            .test('unique', t('channelNameUnique'), (name = '') => {
+              const processedName = name.trim();
+              if (isEditMode && processedName === currentChannel.name) {
+                return true;
+              }
+              if (channels.find(({ name: channelName }) => channelName === processedName)) {
+                return false;
+              }
+              return true;
+            }),
+        })}
       >
         {({
           values,

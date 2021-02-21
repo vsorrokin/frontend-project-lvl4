@@ -1,6 +1,7 @@
 import React, {
   useContext, useRef, useEffect, useState,
 } from 'react';
+import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Formik } from 'formik';
 import Form from 'react-bootstrap/Form';
@@ -11,7 +12,8 @@ import AppContext from '../context';
 
 function NewMessageForm({ className = '' }) {
   const { t } = useTranslation();
-  const { nickname, currentChannelId: channelId } = useContext(AppContext);
+  const { nickname } = useContext(AppContext);
+  const channelId = useSelector((state) => state.chat.currentChannelId);
   const [error, setError] = useState(null);
   const input = useRef(null);
   useEffect(() => {
