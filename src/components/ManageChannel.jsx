@@ -33,7 +33,7 @@ function ManageChannel() {
 
   useEffect(() => {
     if (visibleModalName) {
-      input.current.focus();
+      input?.current?.focus();
     }
   }, [visibleModalName]);
 

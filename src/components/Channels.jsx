@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createSelector } from '@reduxjs/toolkit';
 import { useTranslation } from 'react-i18next';
@@ -8,11 +8,10 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Button from 'react-bootstrap/Button';
 
-import ConfirmDialog from './ConfirmDialog';
+import RemoveChannel from './RemoveChannel';
 import {
   setChannel, openModal,
 } from '../store';
-import API from '../libs/api';
 
 const selectChannels = (state) => state.chat.channels;
 const selectCurrentChannelId = (state) => state.chat.currentChannelId;
@@ -26,7 +25,6 @@ function Channels({ channels }) {
   const currentChannel = useSelector(selectCurrentChannel);
   const dispatch = useDispatch();
   const { t } = useTranslation();
-  const [showConfirm, setShowConfirm] = useState(false);
 
   const rename = () => {
     dispatch(openModal({
@@ -36,25 +34,15 @@ function Channels({ channels }) {
   };
 
   const remove = async () => {
-    setShowConfirm(false);
-    await API.request('removeChannel', {
-      id: currentChannel.id,
-    });
-  };
-
-  const removeRequest = () => {
-    setShowConfirm(true);
+    dispatch(openModal({
+      name: 'removeChannel',
+      data: { channelId: currentChannel.id },
+    }));
   };
 
   return (
     <>
-      <ConfirmDialog
-        onConfirm={remove}
-        onCancel={() => setShowConfirm(false)}
-        show={showConfirm}
-        title={t('confirmChannelRemove')}
-        text={`${t('sureWantToDeleteChannel')} "${currentChannel.name}"`}
-      />
+      <RemoveChannel />
       <Nav className="overflow-auto">
         {channels.map(({ id, name, removable }) => (
           <Nav.Item
@@ -81,7 +69,7 @@ function Channels({ channels }) {
 
                 <Dropdown.Menu>
                   <Dropdown.Item as="button" onClick={rename}>{t('rename')}</Dropdown.Item>
-                  <Dropdown.Item as="button" onClick={removeRequest}>{t('remove')}</Dropdown.Item>
+                  <Dropdown.Item as="button" onClick={remove}>{t('remove')}</Dropdown.Item>
                 </Dropdown.Menu>
               </>
               )}
