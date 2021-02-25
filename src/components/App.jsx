@@ -8,7 +8,7 @@ import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 
 import Channels from './Channels';
-import ManageChannel from './ManageChannel';
+import ChannelModal from './ChannelModal';
 import Chat from './Chat';
 import NewMessageForm from './NewMessageForm';
 import { openModal } from '../store';
@@ -27,12 +27,12 @@ function App() {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const showNewChannelForm = () => {
-    dispatch(openModal({ name: 'manageChannel' }));
+    dispatch(openModal({ name: 'addRenameChannel' }));
   };
 
   return (
     <>
-      <ManageChannel />
+      <ChannelModal />
       <Row className="h-100 border rounded">
         <Col lg="4" className="border-right pt-3 pb-3 d-flex flex-column h-100">
           <div className="d-flex mb-3">

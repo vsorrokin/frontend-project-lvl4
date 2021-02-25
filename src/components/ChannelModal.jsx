@@ -1,18 +1,16 @@
 import React, { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Formik } from 'formik';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { createSelector } from '@reduxjs/toolkit';
+import { Formik } from 'formik';
 import * as Yup from 'yup';
 
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 
+import { closeModal, setChannel } from '../store';
 import API from '../libs/api';
-import {
-  setChannel, closeModal,
-} from '../store';
 
 const selectChannels = (state) => state.chat.channels;
 const selectModalData = (state) => state.modal.modalData;
@@ -21,11 +19,56 @@ const selectCurrentChannel = createSelector(
   (channels, modalData) => channels
     .find(({ id }) => id === modalData?.channelId) || {},
 );
+const selectChannelNames = createSelector(
+  [selectChannels, selectCurrentChannel],
+  (channels, currentChannel) => channels
+    .filter(({ name }) => name !== currentChannel?.name)
+    .map(({ name }) => name),
+);
 
-function ManageChannel() {
+const RemoveChannel = () => {
+  const dispatch = useDispatch();
   const currentChannel = useSelector(selectCurrentChannel);
   const visibleModalName = useSelector((state) => state.modal.visibleModalName);
-  const channels = useSelector(selectChannels);
+  const { t } = useTranslation();
+
+  const handleClose = () => {
+    dispatch(closeModal());
+  };
+
+  const onConfirm = async () => {
+    await API.request('removeChannel', {
+      id: currentChannel.id,
+    });
+    handleClose();
+  };
+
+  return (
+    <Modal show={visibleModalName === 'removeChannel'} onHide={handleClose}>
+      <Modal.Header closeButton>
+        <Modal.Title>
+          {t('confirmChannelRemove')}
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        {`${t('sureWantToDeleteChannel')} "${currentChannel.name}"`}
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={handleClose}>
+          Cancel
+        </Button>
+        <Button variant="danger" onClick={onConfirm}>
+          Confirm
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  );
+};
+
+const AddRenameChannel = () => {
+  const currentChannel = useSelector(selectCurrentChannel);
+  const channelNames = useSelector(selectChannelNames);
+  const visibleModalName = useSelector((state) => state.modal.visibleModalName);
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const input = useRef(null);
@@ -61,7 +104,7 @@ function ManageChannel() {
   };
 
   return (
-    <Modal show={visibleModalName === 'manageChannel'} onHide={handleClose}>
+    <Modal show={visibleModalName === 'addRenameChannel'} onHide={handleClose}>
       <Formik
         initialValues={{ name: currentChannel.name || '' }}
         onSubmit={onSubmit}
@@ -70,16 +113,7 @@ function ManageChannel() {
             .required(t('channelNameRequired'))
             .min(3, t('channelNameLess', { count: 3 }))
             .max(20, t('channelNameMax', { count: 20 }))
-            .test('unique', t('channelNameUnique'), (name = '') => {
-              const processedName = name.trim();
-              if (isEditMode && processedName === currentChannel.name) {
-                return true;
-              }
-              if (channels.find(({ name: channelName }) => channelName === processedName)) {
-                return false;
-              }
-              return true;
-            }),
+            .notOneOf(channelNames, t('channelNameUnique')),
         })}
       >
         {({
@@ -124,6 +158,23 @@ function ManageChannel() {
       </Formik>
     </Modal>
   );
-}
+};
 
-export default ManageChannel;
+const mapping = {
+  removeChannel: RemoveChannel,
+  addRenameChannel: AddRenameChannel,
+};
+
+const ChannelModal = () => {
+  const visibleModalName = useSelector((state) => state.modal.visibleModalName);
+
+  const Component = mapping[visibleModalName];
+
+  return (
+    <>
+      {Component && <Component />}
+    </>
+  );
+};
+
+export default ChannelModal;

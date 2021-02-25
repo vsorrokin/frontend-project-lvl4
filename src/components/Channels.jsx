@@ -8,7 +8,6 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Button from 'react-bootstrap/Button';
 
-import RemoveChannel from './RemoveChannel';
 import {
   setChannel, openModal,
 } from '../store';
@@ -28,12 +27,12 @@ function Channels({ channels }) {
 
   const rename = () => {
     dispatch(openModal({
-      name: 'manageChannel',
+      name: 'addRenameChannel',
       data: { channelId: currentChannel.id },
     }));
   };
 
-  const remove = async () => {
+  const remove = () => {
     dispatch(openModal({
       name: 'removeChannel',
       data: { channelId: currentChannel.id },
@@ -41,45 +40,42 @@ function Channels({ channels }) {
   };
 
   return (
-    <>
-      <RemoveChannel />
-      <Nav className="overflow-auto">
-        {channels.map(({ id, name, removable }) => (
-          <Nav.Item
-            className="w-100"
-            key={id}
-            onClick={() => dispatch(setChannel(id))}
-          >
-            <Dropdown as={ButtonGroup} className="d-flex mb-2">
-              <Button
+    <Nav className="overflow-auto">
+      {channels.map(({ id, name, removable }) => (
+        <Nav.Item
+          className="w-100"
+          key={id}
+          onClick={() => dispatch(setChannel(id))}
+        >
+          <Dropdown as={ButtonGroup} className="d-flex mb-2">
+            <Button
+              variant={id === currentChannel.id ? 'primary' : 'light'}
+              className="flex-grow-1 text-left"
+              onClick={() => dispatch(setChannel(id))}
+            >
+              {name}
+            </Button>
+
+            {removable && (
+            <>
+              <Dropdown.Toggle
+                className="flex-grow-0"
+                split
                 variant={id === currentChannel.id ? 'primary' : 'light'}
-                className="flex-grow-1 text-left"
-                onClick={() => dispatch(setChannel(id))}
-              >
-                {name}
-              </Button>
+              />
 
-              {removable && (
-              <>
-                <Dropdown.Toggle
-                  className="flex-grow-0"
-                  split
-                  variant={id === currentChannel.id ? 'primary' : 'light'}
-                />
+              <Dropdown.Menu>
+                <Dropdown.Item as="button" onClick={rename}>{t('rename')}</Dropdown.Item>
+                <Dropdown.Item as="button" onClick={remove}>{t('remove')}</Dropdown.Item>
+              </Dropdown.Menu>
+            </>
+            )}
 
-                <Dropdown.Menu>
-                  <Dropdown.Item as="button" onClick={rename}>{t('rename')}</Dropdown.Item>
-                  <Dropdown.Item as="button" onClick={remove}>{t('remove')}</Dropdown.Item>
-                </Dropdown.Menu>
-              </>
-              )}
+          </Dropdown>
 
-            </Dropdown>
-
-          </Nav.Item>
-        ))}
-      </Nav>
-    </>
+        </Nav.Item>
+      ))}
+    </Nav>
   );
 }
 
