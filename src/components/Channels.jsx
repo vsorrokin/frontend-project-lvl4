@@ -1,6 +1,5 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { createSelector } from '@reduxjs/toolkit';
 import { useTranslation } from 'react-i18next';
 
 import Nav from 'react-bootstrap/Nav';
@@ -12,30 +11,22 @@ import {
   setChannel, openModal,
 } from '../store';
 
-const selectChannels = (state) => state.chat.channels;
-const selectCurrentChannelId = (state) => state.chat.currentChannelId;
-const selectCurrentChannel = createSelector(
-  [selectChannels, selectCurrentChannelId],
-  (channels, currentChannelId) => channels
-    .find(({ id }) => id === currentChannelId),
-);
-
 function Channels({ channels }) {
-  const currentChannel = useSelector(selectCurrentChannel);
+  const currentChannelId = useSelector((state) => state.chat.currentChannelId);
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
   const rename = () => {
     dispatch(openModal({
       name: 'addRenameChannel',
-      data: { channelId: currentChannel.id },
+      data: { channelId: currentChannelId },
     }));
   };
 
   const remove = () => {
     dispatch(openModal({
       name: 'removeChannel',
-      data: { channelId: currentChannel.id },
+      data: { channelId: currentChannelId },
     }));
   };
 
@@ -49,7 +40,7 @@ function Channels({ channels }) {
         >
           <Dropdown as={ButtonGroup} className="d-flex mb-2">
             <Button
-              variant={id === currentChannel.id ? 'primary' : 'light'}
+              variant={id === currentChannelId ? 'primary' : 'light'}
               className="flex-grow-1 text-left"
               onClick={() => dispatch(setChannel(id))}
             >
@@ -61,7 +52,7 @@ function Channels({ channels }) {
               <Dropdown.Toggle
                 className="flex-grow-0"
                 split
-                variant={id === currentChannel.id ? 'primary' : 'light'}
+                variant={id === currentChannelId ? 'primary' : 'light'}
               />
 
               <Dropdown.Menu>
